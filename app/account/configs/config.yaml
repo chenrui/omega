@@ -1,0 +1,35 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+data:
+  permission_model: |
+    [request_definition]
+    r = sub, obj, act
+
+    [policy_definition]
+    p = sub, obj, act
+
+    [role_definition]
+    g = _, _
+    g2 = _, _
+
+    [policy_effect]
+    e = some(where (p.eft == allow))
+
+    [matchers]
+    m = g(r.sub, p.sub) && g2(r.obj, p.obj) && r.act == p.act
+
+  database:
+    driver: mysql
+    source: root:cssp@cetc30@tcp(10.10.157.219:40020)/swad_test?charset=utf8mb4&parseTime=True&loc=Local
+    max_idle_conns: 10
+    max_open_conns: 100
+    max_lifetime: 3600s
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s

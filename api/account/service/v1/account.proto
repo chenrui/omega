@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api.account.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "omega/api/account/v1/service;v1";
+option java_multiple_files = true;
+option java_package = "api.account.v1";
+
+service Account {
+	rpc CreateUser (CreateUserReq) returns (CreateUserReply);
+	rpc GetUser (GetUserReq) returns (GetUserReply);
+	rpc VerifyPassword (VerifyPasswordReq) returns (VerifyPasswordReply);
+}
+
+message GetUserReq {
+    int64 id = 1;
+}
+
+message GetUserReply {
+    int64 id = 1;
+    string username = 2;
+}
+
+message CreateUserReq {
+    string username = 1;
+    string password = 2;
+}
+
+message CreateUserReply {
+    int64 id = 1;
+    string username = 2;
+}
+
+message VerifyPasswordReq {
+    string id = 1;
+    string password = 2 [(validate.rules).message.required = true];
+}
+
+message VerifyPasswordReply {
+    bool ok = 1;
+}
